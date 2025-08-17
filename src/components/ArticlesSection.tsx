@@ -21,9 +21,21 @@ const articles: Article[] = [
 export default function ArticlesSection() {
   const [index, setIndex] = useState(0);
   const [cardWidth, setCardWidth] = useState(0);
+  const [visibleCount, setVisibleCount] = useState(3); // default para desktop
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const getVisibleCount = () => (window.innerWidth < 640 ? 2 : 3);
+  // Calcula visibleCount solo en el cliente
+  useEffect(() => {
+    const updateVisibleCount = () => {
+      if (typeof window !== "undefined") {
+        setVisibleCount(window.innerWidth < 640 ? 2 : 3);
+      }
+    };
+
+    updateVisibleCount(); // al montar
+    window.addEventListener("resize", updateVisibleCount);
+    return () => window.removeEventListener("resize", updateVisibleCount);
+  }, []);
 
   // Medimos el ancho de la tarjeta después de render
   useEffect(() => {
@@ -39,15 +51,16 @@ export default function ArticlesSection() {
     return () => window.removeEventListener("resize", updateWidth);
   }, []);
 
-  const prev = () => setIndex((prevIdx) => Math.max(prevIdx - getVisibleCount(), 0));
-  const next = () => setIndex((prevIdx) => Math.min(prevIdx + getVisibleCount(), articles.length - getVisibleCount()));
+  const prev = () => setIndex((prevIdx) => Math.max(prevIdx - visibleCount, 0));
+  const next = () => setIndex((prevIdx) => Math.min(prevIdx + visibleCount, articles.length - visibleCount));
 
+  // Avance automático
   useEffect(() => {
     const interval = setInterval(() => {
-      setIndex((prev) => (prev >= articles.length - getVisibleCount() ? 0 : prev + getVisibleCount()));
+      setIndex((prev) => (prev >= articles.length - visibleCount ? 0 : prev + visibleCount));
     }, 7000);
     return () => clearInterval(interval);
-  }, []);
+  }, [visibleCount]);
 
   return (
     <section
@@ -98,7 +111,7 @@ export default function ArticlesSection() {
         {/* Botón siguiente */}
         <button
           onClick={next}
-          disabled={index >= articles.length - getVisibleCount()}
+          disabled={index >= articles.length - visibleCount}
           className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 p-2 bg-white/80 dark:bg-gray-800 rounded-full shadow disabled:opacity-40"
         >
           ▶
