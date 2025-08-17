@@ -13,10 +13,10 @@ export default function WelcomeSection() {
   return (
     <section className="flex flex-col md:flex-row gap-8 items-start md:items-stretch mt-12 w-full px-4 sm:px-6 lg:px-12">
       {/* Card de bienvenida */}
-      <div className="md:w-1/2 rounded-3xl shadow-xl p-6 sm:p-8 flex flex-col justify-center relative overflow-hidden bg-white dark:bg-none text-black dark:text-gray-200">
-        {/* Título con degradado en claro, negro en oscuro */}
+      <div className="md:w-1/2 rounded-3xl shadow-xl p-6 sm:p-8 flex flex-col justify-center relative overflow-hidden bg-white dark:bg-none text-black dark:text-white">
+        {/* Título con degradado en claro, blanco en oscuro */}
         <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4">
-          <span className="bg-gradient-to-r from-blue-400 to-blue-200 bg-clip-text text-transparent dark:text-black">
+          <span className="bg-gradient-to-r from-blue-400 to-blue-200 bg-clip-text text-transparent dark:text-white">
             ¡Bienvenidos a CiberKids!
           </span>
         </h2>
@@ -34,8 +34,8 @@ export default function WelcomeSection() {
             div {
               background: linear-gradient(
                 135deg,
-                oklch(50% 0.2 281.3),
-                oklch(15% 0.08 281.3)
+                oklch(35.9% 0.144 278.697),
+                oklch(25.7% 0.09 281.288)
               );
             }
           }
@@ -44,23 +44,22 @@ export default function WelcomeSection() {
 
       {/* Collage de imágenes */}
       <div className="w-full md:w-1/2 grid grid-cols-2 gap-4">
-    {images.map((src, idx) => (
-        <div
-        key={idx}
-        className="relative w-full min-h-[12rem] sm:min-h-[14rem] md:min-h-[13rem] lg:min-h-[16rem] rounded-2xl overflow-hidden shadow-lg transform transition-transform duration-500 hover:scale-105 active:scale-110"
-        >
-        <Image
-            src={src}
-            alt={`Collage ${idx + 1}`}
-            fill
-            style={{ objectFit: "cover" }}
-            className="rounded-2xl"
-            priority
-        />
-        </div>
-    ))}
-    </div>
+        {images.map((src, idx) => (
+          <div
+            key={idx}
+            className="relative w-full min-h-[12rem] sm:min-h-[14rem] md:min-h-[13rem] lg:min-h-[16rem] rounded-2xl overflow-hidden shadow-lg transform transition-transform duration-500 hover:scale-105 active:scale-110"
+          >
+            <Image
+              src={src}
+              alt={`Collage ${idx + 1}`}
+              fill
+              style={{ objectFit: "cover" }}
+              className="rounded-2xl"
+              priority
+            />
+          </div>
+        ))}
+      </div>
     </section>
   );
 }
-
