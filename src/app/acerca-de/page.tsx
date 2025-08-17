@@ -7,10 +7,37 @@ import { LuSend } from "react-icons/lu";
 export default function AboutUs() {
   return (
     <main className="text-gray-800 dark:text-gray-200">
+    <section
+        className="
+            bg-gradient-to-b from-slate-50 to-neutral-200
+            dark:bg-gradient-to-b dark:from-slate-900 dark:to-violet-900
+            shadow-md mx-5 sm:mx-25 py-15 mb-12
+            text-center font-bold text-5xl
+            rounded-xl flex flex-col items-center gap-6
+        "
+        >
+        <div className="relative w-64 h-64">
+            <Image
+        src="/images/LogoCiberKidsLight.webp"
+        alt="Logo CiberKids Light"
+        fill
+        className="object-contain block dark:hidden"
+        priority
+      />
+      <Image
+        src="/images/LogoCiberKidsDark.webp"
+        alt="Logo CiberKids Dark"
+        fill
+        className="object-contain hidden dark:block"
+        priority
+      />
 
-    <section className="bg-gradient-to-b from-slate-50 to-neutral-200 dark:bg-gradient-to-b dark:from-violet-900 dark:to-indigo-900 shadow-md mx-5 sm:mx-25 py-15 mb-12 text-center font-bold text-5xl rounded-xl">
-        <h1>Acerca de CiberKids</h1>
-    </section>
+        </div>
+        <div>
+            <h1>Acerca de CiberKids</h1>
+        </div>
+        </section>
+
       <section className="max-w-6xl mx-auto py-12 px-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
 
