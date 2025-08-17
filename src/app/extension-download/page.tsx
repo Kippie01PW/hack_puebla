@@ -91,13 +91,13 @@ export default function Extension() {
           </div>
 
           <div className="max-w-md mx-auto text-center bg-transparent rounded p-1">
-          <h2 className="text-3xl font-bold text-blue-600 dark:text-blue-400 mb-3">
+          <h2 className="text-3xl font-bold text-blue-600 dark:text-white mb-3">
             Descarga la extensión
           </h2>
-          <p className="text-lg text-gray-900 dark:text-blue-400 mb-3">
+          <p className="text-lg text-gray-900 dark:text-white mb-3">
             Sigue estos pasos para instalar la extensión de CiberKids y disfrutar de una experiencia segura en línea.
           </p>
-          <ul className="text-base text-gray-900 dark:text-blue-400 list-disc list-inside space-y-2">
+          <ul className="text-base text-gray-900 dark:text-white list-disc list-inside space-y-2">
             <li>Gemini analiza cada página web y advierte si es apta para niños</li>
             <li>Dale clic a la extensión para que actúe</li>
           </ul>
