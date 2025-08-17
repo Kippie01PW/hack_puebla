@@ -9,13 +9,13 @@ import QuickLinks from "@/components/QuickLinks";
 import ArticlesSection from "@/components/ArticlesSection";
 import ChatWidget from "@/components/ChatWidget";
 
+
 export default function Home() {
   const [chatOpen, setChatOpen] = useState(false);
   const chatRef = useRef<HTMLDivElement | null>(null);
 
   const searchParams = useSearchParams();
 
-  // Scroll hacia artículos
   const scrollToArticles = useCallback(() => {
     const el = document.getElementById("articles");
     if (!el) return;
@@ -58,7 +58,6 @@ export default function Home() {
             <ChatWidget close={() => setChatOpen(false)} />
           </div>
         )}
-
         <ArticlesSection />
       </main>
     </div>
