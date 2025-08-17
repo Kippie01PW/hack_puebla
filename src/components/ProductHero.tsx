@@ -4,15 +4,32 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 
 const slides = [
-  { src: "https://picsum.photos/id/1018/1200/400", title: "Producto Uno", desc: "Descripción breve.", href: "/producto/1" },
-  { src: "https://picsum.photos/id/1025/1200/400", title: "Producto Dos", desc: "Descripción breve.", href: "/producto/2" },
-  { src: "https://picsum.photos/id/1033/1200/400", title: "Producto Tres", desc: "Descripción breve.", href: "/producto/3" },
-  { src: "https://picsum.photos/id/1050/1200/400", title: "Producto Cuatro", desc: "Descripción breve.", href: "/producto/4" },
-  { src: "https://picsum.photos/id/1062/1200/400", title: "Producto Cinco", desc: "Descripción breve.", href: "/producto/5" },
+  {
+    src: "https://res.cloudinary.com/dkcpqgkkc/image/upload/v1755460062/imagenhero1_qf1yxk.png",
+    title: "Principales riesgos en línea",
+    desc: "El 50 % se enfrenta a contenido inapropiado o engañoso, el 34.5 % al contacto con extraños y el 20.3 % al ciberacoso."
+  },
+  {
+    src: "https://res.cloudinary.com/dkcpqgkkc/image/upload/v1755460249/imagenhero2_kud6uz.png",
+    title: "“Protege su primer click”",
+    desc: "Cada acción en línea cuenta, y su seguridad también."
+  },
+  {
+    src: "https://res.cloudinary.com/dkcpqgkkc/image/upload/v1755460315/imagenhero3_trec1x.png",
+    title: "“Navegar no debería asustar” – El conocimiento es la mejor protección.",
+    desc: "La orientación temprana reduce riesgos en línea y fomenta hábitos digitales seguros."
+  },
+  {
+    src: "https://res.cloudinary.com/dkcpqgkkc/image/upload/v1755460437/imagenhero4_wpg1mc.png",
+    title: "100% control sin perder diversión",
+    desc: "Una extensión, un chat y consejos claros: la guía que tu hijo necesita para navegar tranquilo."
+  },
 ];
 
 export default function ProductHero() {
   const [active, setActive] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+  const [isDark, setIsDark] = useState(false);
 
   const prevSlide = () => setActive((prev) => (prev === 0 ? slides.length - 1 : prev - 1));
   const nextSlide = () => setActive((prev) => (prev === slides.length - 1 ? 0 : prev + 1));
@@ -24,34 +41,67 @@ export default function ProductHero() {
     return () => clearInterval(interval);
   }, []);
 
+  // Detecta si es móvil (solo en cliente)
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 640);
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // Detecta modo oscuro (solo en cliente)
+  useEffect(() => {
+    const matchDark = window.matchMedia("(prefers-color-scheme: dark)");
+    const updateDark = () => setIsDark(matchDark.matches);
+    updateDark();
+    matchDark.addEventListener("change", updateDark);
+    return () => matchDark.removeEventListener("change", updateDark);
+  }, []);
+
+  // Determina el color de fondo del polígono/overlay
+  const overlayBg = isMobile
+    ? isDark
+      ? "rgba(17, 24, 39, 0.8)" // móvil oscuro
+      : "rgba(163, 190, 214, 0.8)" // móvil claro
+    : isDark
+      ? "#111827" // desktop oscuro
+      : "#A3BED6"; // desktop claro
+
   return (
     <div className="relative w-full mx-auto rounded-3xl overflow-hidden shadow-xl" id="hero">
       <div className="relative h-64 sm:h-80 md:h-[32rem] w-full">
         {/* Imagen de fondo */}
-        <Image src={slides[active].src} alt={`Slide ${active + 1}`} fill className="object-cover" priority />
+        <Image
+          src={slides[active].src}
+          alt={`Slide ${active + 1}`}
+          fill
+          className="object-cover"
+          priority
+        />
 
-       {/* Contenedor del polígono */}
-       <div
-  className="absolute left-0 top-0 h-full w-full sm:w-[70%] md:w-[65%] bg-[#A3BED6] dark:bg-[#111827] flex flex-col justify-center items-start p-4 sm:p-6 md:p-10 z-10 rounded-2xl shadow-lg"
-  style={{ clipPath: "polygon(55% 0, 69% 49%, 55% 100%, 0 100%, 0 0)" }}
->
-  <div className="w-full max-w-full sm:max-w-md ml-10 sm:ml-14 md:ml-22 text-left">
-    <h1 className="text-xl sm:text-2xl md:text-4xl font-bold leading-tight text-black dark:text-white">
-      {slides[active].title}
-    </h1>
-    <p className="mt-2 sm:mt-3 text-xs sm:text-sm md:text-base/6 opacity-90 text-black dark:text-white">
-      {slides[active].desc}
-    </p>
-    <a
-      href={slides[active].href}
-      className="mt-2 sm:mt-4 inline-block px-4 sm:px-8 py-2 sm:py-3 text-sm sm:text-base font-semibold uppercase rounded-lg shadow-lg transition-all duration-500 bg-gradient-to-r from-[#314755] via-[#26a0da] to-[#314755] hover:bg-right dark:from-[#614385] dark:via-[#516395] dark:to-[#614385] border-2 border-white/50 dark:border-white/30 w-max"
-    >
-      Ver producto
-    </a>
-  </div>
-</div>
-
-
+        {/* Overlay poligonal en desktop, fondo translúcido en móvil */}
+        <div
+          className={`absolute left-0 top-0 h-full 
+            w-full sm:w-[80%] md:w-[75%] 
+            flex flex-col justify-center items-start 
+            p-4 sm:p-6 md:p-10 z-10 rounded-2xl shadow-lg`}
+          style={{
+            clipPath: isMobile
+              ? "none"
+              : "polygon(55% 0, 69% 49%, 55% 100%, 0 100%, 0 0)",
+            background: overlayBg,
+          }}
+        >
+          <div className="max-w-full sm:max-w-sm md:max-w-md ml-6 sm:ml-10 md:ml-16 text-left break-words">
+            <h1 className="text-lg sm:text-2xl md:text-4xl font-bold leading-tight text-black dark:text-white">
+              {slides[active].title}
+            </h1>
+            <p className="mt-2 sm:mt-3 text-xs sm:text-sm md:text-base/6 opacity-90 text-black dark:text-white">
+              {slides[active].desc}
+            </p>
+          </div>
+        </div>
+            
         {/* Controles: botones de flecha */}
         <div className="absolute inset-0 flex items-center justify-between px-2 sm:px-4 md:px-8 z-20">
           <button

@@ -3,10 +3,10 @@
 import Image from "next/image";
 
 const images = [
-  "https://picsum.photos/id/1025/400/300",
-  "https://picsum.photos/id/1015/400/300",
-  "https://picsum.photos/id/1035/400/300",
-  "https://picsum.photos/id/1045/400/300",
+  "https://res.cloudinary.com/dkcpqgkkc/image/upload/v1755460777/imagencollage4_vcv5cl.jpg",
+  "https://res.cloudinary.com/dkcpqgkkc/image/upload/v1755460765/imagencollage2_kafvtg.jpg",
+  "https://res.cloudinary.com/dkcpqgkkc/image/upload/v1755460773/imagencollage3_rxgn2m.jpg",
+  "https://res.cloudinary.com/dkcpqgkkc/image/upload/v1755460758/imagencollage1_fskuy4.jpg",
 ];
 
 export default function WelcomeSection() {
