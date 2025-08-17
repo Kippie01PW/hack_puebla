@@ -27,7 +27,7 @@ function Modal({ children, onClose }: { children: React.ReactNode; onClose(): vo
         />
 
         <motion.div
-          className="relative bg-white dark:bg-gray-900 rounded-xl shadow-2xl z-99 p-8 mx-4 max-w-lg w-full"
+          className="relative bg-white dark:bg-gray-900 rounded-xl shadow-2xl z-1000 p-8 mx-4 max-w-lg w-full"
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.9, opacity: 0 }}
@@ -50,9 +50,18 @@ function PrivacyContent() {
   return (
     <>
       <h2 className="text-2xl font-semibold mb-4">Política de Privacidad</h2>
-      <p className="text-gray-700 dark:text-gray-300">
-        Aquí va el texto completo de tu política de privacidad…
-      </p>
+      <p className="text-gray-700 dark:text-gray-300 text-justify">
+        Seguridad en el Inicio de Sesión
+        Al registrarte o iniciar sesión en nuestra plataforma, tu autenticación se establece mediante canales cifrados TLS (HTTPS), garantizando que toda información viaja de forma segura entre tu navegador y nuestros servidores.
+        Las contraseñas nunca se almacenan en texto plano: aplicamos algoritmos de hashing robustos (bcrypt) junto con salting único por usuario, de modo que incluso si existiera un acceso no autorizado a la base de datos, no sería posible reconstruir tus credenciales originales.
+        Almacenamiento de Información en Supabase
+        Toda la información de usuario incluyendo datos de perfil, preferencias y tokens de sesión—se guarda en Supabase, una solución de base de datos en la nube que ofrece:
+        </p>
+        <br />
+        <ul className='list-disc'>
+        <li>Cifrado en reposo y en tránsito, con claves gestionadas por la propia plataforma.</li>
+        <li>Backups automáticos diarios y replicación geográfica para alta disponibilidad.</li>
+        </ul>
     </>
   );
 }
@@ -62,7 +71,20 @@ function TermsContent() {
     <>
       <h2 className="text-2xl font-semibold mb-4">Términos y Condiciones</h2>
       <p className="text-gray-700 dark:text-gray-300">
-        Aquí expones los términos y condiciones de uso de tu servicio…
+        1. Aceptación de los términos
+        Al acceder y utilizar nuestra plataforma, aceptas quedar vinculado por estos términos y condiciones.
+        Si no estás de acuerdo con alguna disposición aquí contenida, te rogamos no usar nuestro sitio web ni los servicios asociados.
+      </p>
+      <p className="text-gray-700 dark:text-gray-300">
+        2. Registro y cuentas de usuario
+        Para disfrutar de ciertas funcionalidades es necesario crear una cuenta.
+        - Eres responsable de mantener la confidencialidad de tus credenciales.
+        - Debes proporcionar información veraz y actualizada en todo momento.
+      </p>
+      <p className="text-gray-700 dark:text-gray-300">
+        3. Uso permitido de la plataforma
+        Nuestro servicio está diseñado para uso personal y familiar.
+        Queda prohibido emplear la plataforma con fines ilícitos o que infrinjan derechos de terceros.
       </p>
     </>
   );
@@ -99,7 +121,7 @@ const Footer = () => {
                   <h2 className="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">Recursos</h2>
                   <ul className="text-gray-500 dark:text-gray-400 font-medium">
                       <li className="mb-4">
-                          <a href="#" className="hover:underline">Extensión</a>
+                          <a href="/extension-download" className="hover:underline">Extensión</a>
                       </li>
                   </ul>
               </div>
