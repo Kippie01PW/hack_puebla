@@ -1,9 +1,12 @@
+"use client";
+
 import Image from "next/image";
 import ProductHero from "../components/ProductHero";
 import WelcomeSection from "@/components/Welcome";
 import QuickLinks from "@/components/QuickLinks";
 import ArticlesSection from "@/components/ArticlesSection";
 import ChatWidget from "@/components/ChatWidget";
+import { useState, useEffect, useRef, useCallback } from "react";
 
 export default function Home() {
   const [chatOpen, setChatOpen] = useState(false);
