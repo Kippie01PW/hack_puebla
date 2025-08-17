@@ -1,4 +1,3 @@
-import Image from "next/image";
 import ProductHero from "../components/ProductHero";
 import WelcomeSection from "@/components/Welcome";
 import QuickLinks from "@/components/QuickLinks";
