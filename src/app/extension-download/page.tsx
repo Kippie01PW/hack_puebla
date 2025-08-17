@@ -98,8 +98,8 @@ export default function Extension() {
             Sigue estos pasos para instalar la extensión de CiberKids y disfrutar de una experiencia segura en línea.
           </p>
           <ul className="text-base text-gray-900 dark:text-white list-disc list-inside space-y-2">
-            <li>Gemini analiza cada página web y advierte si es apta para niños</li>
-            <li>Dale clic a la extensión para que actúe</li>
+            <li>Gemini analiza cada página web y advierte si es apta para niños mediante una extensión para Chrome</li>
+            <li>Consulta la guía de instalación</li>
           </ul>
         </div>
     </section>
