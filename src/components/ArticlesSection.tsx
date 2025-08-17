@@ -1,36 +1,79 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { supabase } from "../../lib/supabaseClient";
 import Image from "next/image";
 
-interface Article {
-  title: string;
-  description: string;
-  img: string;
+interface ImagenArticulo {
+  id: number;
+  articulo_id: number;
+  url: string;
+  created_at: string;
 }
 
-const articles: Article[] = [
-  { title: "Artículo 1", description: "Información confiable para eliminar tabúes y fomentar el pensamiento crítico.", img: "https://picsum.photos/id/1011/400/300" },
-  { title: "Artículo 2", description: "Recursos claros y seguros sobre la era digital.", img: "https://picsum.photos/id/1012/400/300" },
-  { title: "Artículo 3", description: "Consejos prácticos para padres y docentes.", img: "https://picsum.photos/id/1013/400/300" },
-  { title: "Artículo 4", description: "Estrategias para proteger a los niños en línea.", img: "https://picsum.photos/id/1014/400/300" },
-  { title: "Artículo 5", description: "Guías de ciberseguridad para adolescentes.", img: "https://picsum.photos/id/1015/400/300" },
-  { title: "Artículo 6", description: "Cómo identificar riesgos digitales tempranamente.", img: "https://picsum.photos/id/1016/400/300" },
-];
+interface Articulo {
+  id: number;
+  titulo: string;
+  resumen: string;
+  created_at: string;
+  imagenes_articulos?: ImagenArticulo[];
+}
 
 export default function ArticlesSection() {
+  const [articles, setArticles] = useState<Articulo[]>([]);
   const [index, setIndex] = useState(0);
   const [cardWidth, setCardWidth] = useState(0);
+  const [visibleCount, setVisibleCount] = useState(3);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const getVisibleCount = () => (window.innerWidth < 640 ? 2 : 3);
+  // 🔹 Actualizar el número de tarjetas visibles según el ancho
+  useEffect(() => {
+    const updateVisibleCount = () => {
+      if (typeof window !== "undefined") {
+        setVisibleCount(window.innerWidth < 640 ? 2 : 3);
+      }
+    };
+    updateVisibleCount();
+    window.addEventListener("resize", updateVisibleCount);
+    return () => window.removeEventListener("resize", updateVisibleCount);
+  }, []);
 
-  // Medimos el ancho de la tarjeta después de render
+  // 🔹 Fetch a Supabase con relación a imagenes_articulos
+  useEffect(() => {
+    const fetchArticles = async () => {
+      const { data, error } = await supabase
+        .from("articulo")
+        .select(`
+          id,
+          titulo,
+          resumen,
+          created_at,
+          imagenes_articulos (
+            id,
+            articulo_id,
+            url
+          )
+        `)
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        console.error("Error fetching articles:", error.message);
+        return;
+      }
+
+      setArticles(data as Articulo[]);
+    };
+
+    fetchArticles();
+  }, []);
+
+  // 🔹 Medir ancho de tarjeta
   useEffect(() => {
     const updateWidth = () => {
       if (containerRef.current) {
-        const firstCard = containerRef.current.querySelector<HTMLDivElement>(".article-card");
-        if (firstCard) setCardWidth(firstCard.offsetWidth + 16); // 16 = gap en px
+        const firstCard =
+          containerRef.current.querySelector<HTMLDivElement>(".article-card");
+        if (firstCard) setCardWidth(firstCard.offsetWidth + 16);
       }
     };
 
@@ -39,22 +82,28 @@ export default function ArticlesSection() {
     return () => window.removeEventListener("resize", updateWidth);
   }, []);
 
-  const prev = () => setIndex((prevIdx) => Math.max(prevIdx - getVisibleCount(), 0));
-  const next = () => setIndex((prevIdx) => Math.min(prevIdx + getVisibleCount(), articles.length - getVisibleCount()));
+  const prev = () =>
+    setIndex((prevIdx) => Math.max(prevIdx - visibleCount, 0));
+  const next = () =>
+    setIndex((prevIdx) =>
+      Math.min(prevIdx + visibleCount, articles.length - visibleCount)
+    );
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setIndex((prev) => (prev >= articles.length - getVisibleCount() ? 0 : prev + getVisibleCount()));
+      setIndex((prev) =>
+        prev >= articles.length - visibleCount ? 0 : prev + visibleCount
+      );
     }, 7000);
     return () => clearInterval(interval);
-  }, []);
+  }, [articles, visibleCount]);
 
   return (
     <section
       id="articles"
       className="scroll-mt-24 sm:scroll-mt-28 md:scroll-mt-32 my-12 px-4 sm:px-6 lg:px-12"
     >
-      <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-center mb-8 bg-gradient-to-r from-blue-400 via-blue-500 to-indigo-600 bg-clip-text text-transparent dark:from-indigo-500 dark:via-blue-400 dark:to-indigo-700 dark:text-transparent">
+      <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-center mb-8 bg-gradient-to-r from-blue-400 via-blue-500 to-indigo-600 bg-clip-text text-transparent">
         Artículos
       </h2>
 
@@ -74,31 +123,48 @@ export default function ArticlesSection() {
           className="flex gap-4 transition-transform duration-500"
           style={{ transform: `translateX(-${index * cardWidth}px)` }}
         >
-          {articles.map((article, idx) => (
-            <div
-              key={idx}
-              className="article-card flex-shrink-0 w-[45%] sm:w-[30%] rounded-2xl shadow-lg flex flex-col items-center p-4 bg-blue-50 dark:bg-gray-800"
-            >
-              <div className="w-full h-40 relative mb-4 rounded-xl overflow-hidden">
-                <Image
-                  src={article.img}
-                  alt={article.title}
-                  fill
-                  style={{ objectFit: "cover" }}
-                  className="rounded-xl"
-                  priority
-                />
+          {articles.map((article) => {
+            const fecha = new Date(article.created_at).toLocaleDateString(
+              "es-MX",
+              { year: "numeric", month: "long", day: "numeric" }
+            );
+
+            // Tomar la primera imagen si existe
+            const imgUrl =
+              article.imagenes_articulos?.[0]?.url || "/placeholder.jpg";
+
+            return (
+              <div
+                key={article.id}
+                className="article-card flex-shrink-0 w-[45%] sm:w-[30%] rounded-2xl shadow-lg flex flex-col items-center p-4 bg-blue-50 dark:bg-gray-800"
+              >
+                {/* Imagen del artículo */}
+                <div className="w-full h-64 relative mb-4 rounded-xl overflow-hidden">
+                  <Image
+                    src={imgUrl}
+                    alt={article.titulo}
+                    fill
+                    style={{ objectFit: "cover" }}
+                    className="rounded-xl"
+                  />
+                </div>
+
+                <h3 className="text-xl font-semibold mb-2 text-center">
+                  {article.titulo}
+                </h3>
+                <p className="text-xs text-gray-500 mb-2">{fecha}</p>
+                <p className="text-sm md:text-base text-center opacity-90">
+                  {article.resumen}
+                </p>
               </div>
-              <h3 className="text-xl font-semibold mb-2 text-center">{article.title}</h3>
-              <p className="text-sm md:text-base text-center opacity-90">{article.description}</p>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         {/* Botón siguiente */}
         <button
           onClick={next}
-          disabled={index >= articles.length - getVisibleCount()}
+          disabled={index >= articles.length - visibleCount}
           className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 p-2 bg-white/80 dark:bg-gray-800 rounded-full shadow disabled:opacity-40"
         >
           ▶
@@ -107,3 +173,14 @@ export default function ArticlesSection() {
     </section>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
