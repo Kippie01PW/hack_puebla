@@ -6,23 +6,26 @@ import { useRouter } from 'next/navigation';
 import type { User } from "@supabase/supabase-js";
 import {supabase} from '../../lib/supabaseClient';  
 
+
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [user, setUser] = useState<User | null>(null)
+  const [user, setUser] = useState<User|null>(null)
   const router = useRouter();
+  const [loading, setLoading]= useState(true); 
 
     // Obtener el usuario al cargar el componente
   useEffect(() => {
     const checkUser = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       setUser(session?.user || null);
-      setLoading(false);
+     setLoading(false); 
     };
 
     // Escuchar cambios de autenticación
     const { data: authListener } = supabase.auth.onAuthStateChange((_, session) => {
       setUser(session?.user || null);
-      setLoading(false);
+      setLoading(false); 
+      
     });
 
     checkUser();
@@ -219,3 +222,4 @@ const Navbar = () => {
   );
 };
 
+export default Navbar; 
