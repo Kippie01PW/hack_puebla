@@ -47,19 +47,19 @@ export default function WelcomeSection() {
         {images.map((src, idx) => (
           <div
             key={idx}
-            className="relative w-full min-h-[12rem] sm:min-h-[14rem] md:min-h-[13rem] lg:min-h-[16rem] rounded-2xl overflow-hidden shadow-lg transform transition-transform duration-500 hover:scale-105 active:scale-110"
+            className="relative w-full min-h-[12rem] sm:min-h-[14rem] md:min-h-[13rem] lg:min-h-[16rem] rounded-2xl overflow-hidden shadow-lg border-2 border-blue-200 dark:border-blue-900 transition-all duration-300 hover:scale-105 hover:shadow-2xl active:scale-100"
           >
             <Image
               src={src}
               alt={`Collage ${idx + 1}`}
               fill
               style={{ objectFit: "cover" }}
-              className="rounded-2xl"
+              className="rounded-2xl transition-all duration-300"
               priority
             />
           </div>
         ))}
       </div>
     </section>
-  );
+  );
 }
