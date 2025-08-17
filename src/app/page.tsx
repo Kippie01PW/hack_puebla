@@ -1,4 +1,9 @@
-import Image from "next/image";
+
+"use client";
+
+import { useState, useCallback, useRef, useEffect } from "react";
+
+
 import ProductHero from "../components/ProductHero";
 import WelcomeSection from "@/components/Welcome";
 import QuickLinks from "@/components/QuickLinks";
