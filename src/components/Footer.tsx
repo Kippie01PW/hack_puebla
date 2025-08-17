@@ -1,7 +1,10 @@
 "use client"
 import React from 'react';
 import { useState } from 'react';
+
 import { AnimatePresence, motion } from 'framer-motion';
+import Image from 'next/image'  
+import { Link } from 'lucide-react';
 
 function Modal({ children, onClose }: { children: React.ReactNode; onClose(): void }) {
   return (
@@ -74,7 +77,20 @@ const Footer = () => {
         <div className="md:flex md:justify-between">
           <div className="mb-6 md:mb-0">
               <a href="#" className="flex items-center">
-                  <img src="https://flowbite.com/docs/images/logo.svg" className="h-8 me-3" alt="CiberKids logo" />
+                  <div className="relative w-12 aspect-square">
+                    <Image
+                        src="/images/LogoCiberKidsLight.webp"
+                        alt="CiberKids logo claro"
+                        fill
+                        className="object-contain block dark:hidden"
+                    />
+                    <Image
+                        src="/images/LogoCiberKidsDark.webp"
+                        alt="CiberKids logo oscuro"
+                        fill
+                        className="object-contain hidden dark:block"
+                    />
+                    </div>
                   <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">CiberKids</span>
               </a>
           </div>
