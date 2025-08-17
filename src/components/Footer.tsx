@@ -3,6 +3,68 @@ import React from 'react';
 import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 
+function Modal({ children, onClose }: { children: React.ReactNode; onClose(): void }) {
+  return (
+    <AnimatePresence>
+      <motion.div
+        className="fixed inset-0 z-40 flex items-center justify-center"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.3 }}
+      >
+        <motion.button
+          className="absolute inset-0 bg-gray bg-opacity-30 backdrop-blur-sm"
+          onClick={onClose}
+          aria-label="Cerrar modal"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
+        />
+
+        <motion.div
+          className="relative bg-white dark:bg-gray-900 rounded-xl shadow-2xl z-99 p-8 mx-4 max-w-lg w-full"
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          exit={{ scale: 0.9, opacity: 0 }}
+          transition={{ type: 'spring', stiffness: 250, damping: 20 }}
+        >
+          <button
+            className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+            onClick={onClose}
+            aria-label="Cerrar modal"
+          >
+            ×
+          </button>
+          {children}
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
+  );
+}
+function PrivacyContent() {
+  return (
+    <>
+      <h2 className="text-2xl font-semibold mb-4">Política de Privacidad</h2>
+      <p className="text-gray-700 dark:text-gray-300">
+        Aquí va el texto completo de tu política de privacidad…
+      </p>
+    </>
+  );
+}
+
+function TermsContent() {
+  return (
+    <>
+      <h2 className="text-2xl font-semibold mb-4">Términos y Condiciones</h2>
+      <p className="text-gray-700 dark:text-gray-300">
+        Aquí expones los términos y condiciones de uso de tu servicio…
+      </p>
+    </>
+  );
+}
+
 const Footer = () => {
     const [openModal, setOpenModal] = useState<null | 'privacy' | 'terms'>(null);
   return (
@@ -37,22 +99,32 @@ const Footer = () => {
                   <h2 className="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">Legal</h2>
                   <ul className="text-gray-500 dark:text-gray-400 font-medium">
                     <li className="mb-4">
-                        <button
+                    <button
                         className="hover:underline focus:outline-none"
                         onClick={() => setOpenModal('privacy')}
-                        >
+                    >
                         Política de privacidad
-                        </button>
+                    </button>
                     </li>
                     <li>
-                        <button
+                    <button
                         className="hover:underline focus:outline-none"
                         onClick={() => setOpenModal('terms')}
-                        >
+                    >
                         Términos y condiciones
-                        </button>
+                    </button>
                     </li>
-                    </ul>
+                </ul>
+                {openModal === 'privacy' && (
+                    <Modal onClose={() => setOpenModal(null)}>
+                    <PrivacyContent />
+                    </Modal>
+                )}
+                {openModal === 'terms' && (
+                    <Modal onClose={() => setOpenModal(null)}>
+                    <TermsContent />
+                    </Modal>
+                )}
               </div>
           </div>
       </div>

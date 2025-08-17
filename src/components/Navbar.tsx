@@ -7,7 +7,7 @@ const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <nav className="bg-white border-gray-200 dark:bg-slate-950 p-5 sticky top-0 z-99">
+    <nav className="bg-white border-gray-200 dark:bg-slate-950 p-5 sticky top-0 z-98">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
         <Link href="#" className="flex items-center space-x-3 rtl:space-x-reverse">
           <img src="https://flowbite.com/docs/images/logo.svg" className="h-8" alt="Flowbite Logo" />
@@ -85,15 +85,13 @@ const Navbar = () => {
             aria-label="Cerrar menú"
           />
 
-          {/* Modal centrado */}
           <motion.div
-            className="relative bg-white dark:bg-gray-900 rounded-xl shadow-2xl z-50 p-8 mx-4 max-w-sm w-full text-center"
+            className="relative bg-white dark:bg-gray-900 rounded-xl shadow-2xl z-99 p-8 mx-4 max-w-sm w-full text-center"
             initial={{ scale: 0.3, opacity: 0 }}
             animate={{ scale: 1,   opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
             transition={{ type: 'spring', stiffness: 260, damping: 20 }}
           >
-            {/* Botón de cerrar */}
             <button
               className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
               onClick={() => setMenuOpen(false)}
