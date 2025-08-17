@@ -99,6 +99,9 @@ const Navbar = () => {
               ChatBot
             </a>
             </li>
+            <li>
+              <Link href="/extension-download" className="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Extensión</Link>
+            </li>
           </ul>
         </div>
       </div>
@@ -164,6 +167,11 @@ const Navbar = () => {
                   >
                     ChatBot
                   </a>
+                </li>
+                <li>
+                  <Link href="/extension-download" className="block text-lg text-gray-800 dark:text-gray-200 hover:text-gray-600 dark:hover:text-gray-400" onClick={() => setMenuOpen(false)}>
+                    Extensión
+                  </Link>
                 </li>
               </ul>
             </motion.div>
