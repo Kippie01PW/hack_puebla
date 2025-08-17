@@ -111,7 +111,7 @@ const Navbar = () => {
               </li>
               <li>
                 <Link
-                  href="#"
+                  href="/"
                   className="block text-lg font-semibold text-blue-600 hover:text-blue-800"
                   onClick={() => setMenuOpen(false)}
                 >
@@ -129,7 +129,7 @@ const Navbar = () => {
               </li>
               <li>
                 <Link
-                  href="#"
+                  href="acerca-de"
                   className="block text-lg text-gray-800 dark:text-gray-200 hover:text-gray-600 dark:hover:text-gray-400"
                   onClick={() => setMenuOpen(false)}
                 >
