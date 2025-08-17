@@ -14,19 +14,16 @@ const Navbar = () => {
   // Obtener el usuario al cargar el componente
   useEffect(() => {
     const checkUser = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
+      const { data: { session } } = await supabase.auth.getSession();
       setUser(session?.user || null);
       setLoading(false);
     };
 
-    const { data: authListener } = supabase.auth.onAuthStateChange(
-      (_, session) => {
-        setUser(session?.user || null);
-        setLoading(false);
-      }
-    );
+    // Escuchar cambios de autenticación
+    const { data: authListener } = supabase.auth.onAuthStateChange((_, session) => {
+      setUser(session?.user || null);
+      setLoading(false);
+    });
 
     checkUser();
 
@@ -40,7 +37,7 @@ const Navbar = () => {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
+        redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`, // Ajusta si usas otro dominio
       },
     });
     if (error) console.error("Error al iniciar con Google:", error.message);
@@ -52,9 +49,10 @@ const Navbar = () => {
     setUser(null);
   };
 
+  // Mostrar avatar o botón de login
   const userAvatar = user?.user_metadata?.avatar_url;
-  const userName =
-    user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Usuario";
+  const userName = user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Usuario";
+  const userEmail = user?.email || "";
 
  
   
@@ -63,14 +61,8 @@ const Navbar = () => {
      <nav className="bg-white border-gray-200 dark:bg-slate-950 p-5 sticky top-0 z-98">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
         <Link href="/" className="flex items-center space-x-3 rtl:space-x-reverse">
-          <img
-            src="https://flowbite.com/docs/images/logo.svg"
-            className="h-8"
-            alt="Flowbite Logo"
-          />
-          <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
-            CiberKids
-          </span>
+          <img src="https://flowbite.com/docs/images/logo.svg" className="h-8" alt="Flowbite Logo" />
+          <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">CiberKids</span>
         </Link>
 
         {/* Avatar o botón de login */}
@@ -177,131 +169,104 @@ const Navbar = () => {
             </svg>
           </button>
         </div>
-
-        {/* Desktop menu */}
+        {/* Menú normal para desktop */}
         <div className="hidden md:flex items-center justify-between w-auto md:order-1" id="navbar-user">
           <ul className="flex flex-row font-medium gap-x-6">
             <li>
-              <Link
-                href="/"
-                className="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700"
-              >
-                Inicio
-              </Link>
+              <Link href="/" className="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Inicio</Link>
             </li>
             <li>
-              <a
-                href="#articles"
-                onClick={goToArticles}
-                className="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700"
-              >
-                Artículos
-              </a>
+              <Link href="#" className="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Artículos</Link>
             </li>
             <li>
-              <Link
-                href="/acerca-de"
-                className="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700"
-              >
-                Acerca de
-              </Link>
+              <Link href="acerca-de" className="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Acerca de</Link>
             </li>
             <li>
-              <a
-                href="#chatbot"
-                onClick={goToChatbot}
-                className="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700"
-              >
-                ChatBot
-              </a>
+              <Link href="#" className="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">ChatBot</Link>
             </li>
           </ul>
         </div>
       </div>
 
-      {/* Mobile menu overlay */}
       <AnimatePresence>
-        {menuOpen && (
+      {menuOpen && (
+        <motion.div
+          className="fixed inset-0 z-40 flex items-center justify-center"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+        >
+          <button
+            className="absolute inset-0 bg-gray bg-opacity-30 backdrop-blur-sm"
+            onClick={() => setMenuOpen(false)}
+            aria-label="Cerrar menú"
+          />
+
           <motion.div
-            className="fixed inset-0 z-40 flex items-center justify-center"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+            className="relative bg-white dark:bg-gray-900 rounded-xl shadow-2xl z-99 p-8 mx-4 max-w-sm w-full text-center"
+            initial={{ scale: 0.3, opacity: 0 }}
+            animate={{ scale: 1,   opacity: 1 }}
+            exit={{ scale: 0.9, opacity: 0 }}
+            transition={{ type: 'spring', stiffness: 260, damping: 20 }}
           >
             <button
-              className="absolute inset-0 bg-gray bg-opacity-30 backdrop-blur-sm"
+              className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
               onClick={() => setMenuOpen(false)}
               aria-label="Cerrar menú"
-            />
-            <motion.div
-              className="relative bg-white dark:bg-gray-900 rounded-xl shadow-2xl z-50 p-8 mx-4 max-w-sm w-full text-center"
-              initial={{ scale: 0.3, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              transition={{ type: "spring", stiffness: 260, damping: 20 }}
             >
-              <button
-                className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
-                onClick={() => setMenuOpen(false)}
-                aria-label="Cerrar menú"
-              >
-                <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <line x1="6" y1="6" x2="18" y2="18" />
-                  <line x1="6" y1="18" x2="18" y2="6" />
-                </svg>
-              </button>
+              <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2">
+                <line x1="6" y1="6" x2="18" y2="18" />
+                <line x1="6" y1="18" x2="18" y2="6" />
+              </svg>
+            </button>
 
-              <ul className="flex flex-col items-center gap-6 mt-8">
-                <li>
-                  <Link
-                    href="/"
-                    className="block text-lg font-semibold text-black border-b border-blue-700 dark:border-emerald-300 px-6 py-3 dark:text-white hover:text-blue-800"
-                    onClick={() => setMenuOpen(false)}
-                  >
-                    CiberKids
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/"
-                    className="block text-lg font-semibold text-blue-600 hover:text-blue-800"
-                    onClick={() => setMenuOpen(false)}
-                  >
-                    Inicio
-                  </Link>
-                </li>
-                <li>
-                  <a
-                    href="#articles"
-                    onClick={goToArticles}
-                    className="block text-lg text-gray-800 dark:text-gray-200 hover:text-gray-600 dark:hover:text-gray-400"
-                  >
-                    Artículos
-                  </a>
-                </li>
-                <li>
-                  <Link
-                    href="/acerca-de"
-                    className="block text-lg text-gray-800 dark:text-gray-200 hover:text-gray-600 dark:hover:text-gray-400"
-                    onClick={() => setMenuOpen(false)}
-                  >
-                    Acerca de
-                  </Link>
-                </li>
-                <li>
-                  <a
-                    href="#quicklinks-chatbot"
-                    onClick={goToChatbot}
-                    className="block text-lg text-gray-800 dark:text-gray-200 hover:text-gray-600 dark:hover:text-gray-400"
-                  >
-                    ChatBot
-                  </a>
-                </li>
-              </ul>
-            </motion.div>
+            <ul className="flex flex-col items-center gap-6 mt-8">
+              <li>
+                <Link href="/" className="block text-lg font-semibold text-black border-b border-blue-700 dark:border-emerald-300 px-22 py-3 dark:text-white hover:text-blue-800" onClick={() => setMenuOpen(false)}>
+                  CiberKids
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="#"
+                  className="block text-lg font-semibold text-blue-600 hover:text-blue-800"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  Inicio
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="#"
+                  className="block text-lg text-gray-800 dark:text-gray-200 hover:text-gray-600 dark:hover:text-gray-400"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  Artículos
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="#"
+                  className="block text-lg text-gray-800 dark:text-gray-200 hover:text-gray-600 dark:hover:text-gray-400"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  Acerca de
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="#"
+                  className="block text-lg text-gray-800 dark:text-gray-200 hover:text-gray-600 dark:hover:text-gray-400"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  ChatBot
+                </Link>
+              </li>
+            </ul>
           </motion.div>
-        )}
-      </AnimatePresence>
+        </motion.div>
+      )}
+    </AnimatePresence>
     </nav>
   );
 };
