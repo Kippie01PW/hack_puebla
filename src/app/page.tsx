@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useRef, useEffect } from "react";
+import { useState, useCallback, useRef, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 
 import ProductHero from "../components/ProductHero";
@@ -9,8 +9,7 @@ import QuickLinks from "@/components/QuickLinks";
 import ArticlesSection from "@/components/ArticlesSection";
 import ChatWidget from "@/components/ChatWidget";
 
-
-export default function Home() {
+function HomeContent() {
   const [chatOpen, setChatOpen] = useState(false);
   const chatRef = useRef<HTMLDivElement | null>(null);
 
@@ -22,17 +21,14 @@ export default function Home() {
     el.scrollIntoView({ behavior: "smooth", block: "start" });
   }, []);
 
-  // Cuando el chat se abre, hacer scroll hacia él
   useEffect(() => {
     if (chatOpen && chatRef.current) {
       chatRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
-      // Opcional: efecto de brillo
       chatRef.current.classList.add("animate-pulse");
       setTimeout(() => chatRef.current?.classList.remove("animate-pulse"), 1000);
     }
   }, [chatOpen]);
 
-  // Detectar query ?scroll=chatbot y abrir chat automáticamente
   useEffect(() => {
     if (searchParams.get("scroll") === "chatbot") {
       setChatOpen(true);
@@ -61,5 +57,13 @@ export default function Home() {
         <ArticlesSection />
       </main>
     </div>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense fallback={<div>Cargando...</div>}>
+      <HomeContent />
+    </Suspense>
   );
 }
