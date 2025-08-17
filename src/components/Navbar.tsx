@@ -14,16 +14,19 @@ const Navbar = () => {
   // Obtener el usuario al cargar el componente
   useEffect(() => {
     const checkUser = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
       setUser(session?.user || null);
       setLoading(false);
     };
 
-    // Escuchar cambios de autenticación
-    const { data: authListener } = supabase.auth.onAuthStateChange((_, session) => {
-      setUser(session?.user || null);
-      setLoading(false);
-    });
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      (_, session) => {
+        setUser(session?.user || null);
+        setLoading(false);
+      }
+    );
 
     checkUser();
 
@@ -37,7 +40,7 @@ const Navbar = () => {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`, // Ajusta si usas otro dominio
+        redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
       },
     });
     if (error) console.error("Error al iniciar con Google:", error.message);
@@ -49,10 +52,9 @@ const Navbar = () => {
     setUser(null);
   };
 
-  // Mostrar avatar o botón de login
   const userAvatar = user?.user_metadata?.avatar_url;
-  const userName = user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Usuario";
-  const userEmail = user?.email || "";
+  const userName =
+    user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Usuario";
 
  
   
@@ -61,8 +63,14 @@ const Navbar = () => {
      <nav className="bg-white border-gray-200 dark:bg-slate-950 p-5 sticky top-0 z-98">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
         <Link href="/" className="flex items-center space-x-3 rtl:space-x-reverse">
-          <img src="https://flowbite.com/docs/images/logo.svg" className="h-8" alt="Flowbite Logo" />
-          <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">CiberKids</span>
+          <img
+            src="https://flowbite.com/docs/images/logo.svg"
+            className="h-8"
+            alt="Flowbite Logo"
+          />
+          <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
+            CiberKids
+          </span>
         </Link>
 
         {/* Avatar o botón de login */}
@@ -152,38 +160,60 @@ const Navbar = () => {
             onClick={() => setMenuOpen(!menuOpen)}
           >
             <span className="sr-only">Open main menu</span>
-            <svg className="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
-              <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M1 1h15M1 7h15M1 13h15"/>
+            <svg
+              className="w-5 h-5"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 17 14"
+            >
+              <path
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M1 1h15M1 7h15M1 13h15"
+              />
             </svg>
           </button>
         </div>
 
         {/* Desktop menu */}
         <div className="hidden md:flex items-center justify-between w-auto md:order-1" id="navbar-user">
-          <ul className="flex flex-row font-medium gap-x-25">
+          <ul className="flex flex-row font-medium gap-x-6">
             <li>
-              <Link href="/" className="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Inicio</Link>
+              <Link
+                href="/"
+                className="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700"
+              >
+                Inicio
+              </Link>
             </li>
             <li>
               <a
                 href="#articles"
-                onClick={(e) => goToArticles(e)}
-                className="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
+                onClick={goToArticles}
+                className="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700"
               >
                 Artículos
               </a>
             </li>
             <li>
-              <Link href="acerca-de" className="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Acerca de</Link>
+              <Link
+                href="/acerca-de"
+                className="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700"
+              >
+                Acerca de
+              </Link>
             </li>
             <li>
               <a
-              href="#chatbot"
-              onClick={(e) => goToChatbot(e)}
-              className="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
-            >
-              ChatBot
-            </a>
+                href="#chatbot"
+                onClick={goToChatbot}
+                className="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700"
+              >
+                ChatBot
+              </a>
             </li>
           </ul>
         </div>
@@ -204,11 +234,11 @@ const Navbar = () => {
               aria-label="Cerrar menú"
             />
             <motion.div
-              className="relative bg-white dark:bg-gray-900 rounded-xl shadow-2xl z-99 p-8 mx-4 max-w-sm w-full text-center"
+              className="relative bg-white dark:bg-gray-900 rounded-xl shadow-2xl z-50 p-8 mx-4 max-w-sm w-full text-center"
               initial={{ scale: 0.3, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              transition={{ type: 'spring', stiffness: 260, damping: 20 }}
+              transition={{ type: "spring", stiffness: 260, damping: 20 }}
             >
               <button
                 className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
@@ -223,29 +253,45 @@ const Navbar = () => {
 
               <ul className="flex flex-col items-center gap-6 mt-8">
                 <li>
-                  <Link href="/" className="block text-lg font-semibold text-black border-b border-blue-700 dark:border-emerald-300 px-22 py-3 dark:text-white hover:text-blue-800" onClick={() => setMenuOpen(false)}>
+                  <Link
+                    href="/"
+                    className="block text-lg font-semibold text-black border-b border-blue-700 dark:border-emerald-300 px-6 py-3 dark:text-white hover:text-blue-800"
+                    onClick={() => setMenuOpen(false)}
+                  >
                     CiberKids
                   </Link>
                 </li>
                 <li>
-                  <Link href="/" className="block text-lg font-semibold text-blue-600 hover:text-blue-800" onClick={() => setMenuOpen(false)}>
+                  <Link
+                    href="/"
+                    className="block text-lg font-semibold text-blue-600 hover:text-blue-800"
+                    onClick={() => setMenuOpen(false)}
+                  >
                     Inicio
                   </Link>
                 </li>
                 <li>
-                  <a href="#articles" onClick={(e) => goToArticles(e)} className="block text-lg text-gray-800 dark:text-gray-200 hover:text-gray-600 dark:hover:text-gray-400">
+                  <a
+                    href="#articles"
+                    onClick={goToArticles}
+                    className="block text-lg text-gray-800 dark:text-gray-200 hover:text-gray-600 dark:hover:text-gray-400"
+                  >
                     Artículos
                   </a>
                 </li>
                 <li>
-                  <Link href="acerca-de" className="block text-lg text-gray-800 dark:text-gray-200 hover:text-gray-600 dark:hover:text-gray-400" onClick={() => setMenuOpen(false)}>
+                  <Link
+                    href="/acerca-de"
+                    className="block text-lg text-gray-800 dark:text-gray-200 hover:text-gray-600 dark:hover:text-gray-400"
+                    onClick={() => setMenuOpen(false)}
+                  >
                     Acerca de
                   </Link>
                 </li>
                 <li>
                   <a
                     href="#quicklinks-chatbot"
-                    onClick={(e) => goToChatbot(e)}
+                    onClick={goToChatbot}
                     className="block text-lg text-gray-800 dark:text-gray-200 hover:text-gray-600 dark:hover:text-gray-400"
                   >
                     ChatBot
